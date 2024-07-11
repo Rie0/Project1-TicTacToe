@@ -78,8 +78,44 @@ public class Main {
             grid[userRow][userColumn]=2;
         }
     }
-    public static boolean checkSpace(int[][] grid){
-        //Check if there's an empty space. (turn into a method)
+    public static boolean isUserWinner(int[][] grid){ //(int[][] grid, current player? with user being 2 and AI 1??)
+        //3 cases.
+        boolean isUserWinner = false;
+//Case 1 Horizontal wins
+        if (grid[0][0]==2&&grid[0][1]==2&&grid[0][2]==2){
+            isUserWinner=true;
+        }
+        if (grid[1][0]==2&&grid[1][1]==2&&grid[1][2]==2){
+            isUserWinner=true;
+        }
+        if (grid[2][0]==2&&grid[2][1]==2&&grid[2][2]==2){
+            isUserWinner=true;
+        }
+        return isUserWinner;
+
+    }
+
+    public static boolean isAiWinner(int[][] grid){ //(int[][] grid, current player? with user being 2 and AI 1??)
+        //3 cases.
+        boolean isAiWinner = false;
+//Case 1 Horizontal wins
+
+        if (grid[0][0]==1&&grid[0][1]==1&&grid[0][2]==1){
+            isAiWinner = true;
+        }
+        if (grid[1][0]==1&&grid[1][1]==1&&grid[1][2]==1){
+            isAiWinner = true;
+        }
+        if (grid[2][0]==1&&grid[2][1]==1&&grid[2][2]==1){
+            isAiWinner = true;
+        }
+
+        return isAiWinner;
+
+    }
+
+    public static boolean isTie(int[][] grid){
+        //Check if the grid is full //NAMING PLEAAASE
         boolean isFull = false;
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid.length; j++) {
@@ -92,14 +128,26 @@ public class Main {
     }
 
     public static void matchMaker(int[][] grid){
+        boolean isGameGoing = false;
         do {
             aiTurn(grid);
             printGrid(grid);
-            checkSpace(grid);
             userTurn(grid);
             printGrid(grid);
-            checkSpace(grid);
-        }while (checkSpace(grid));
-        System.out.println("Tie.");
+            System.out.println("--------Check--------");
+            System.out.println(isAiWinner(grid));
+            System.out.println(isUserWinner(grid));
+            System.out.println(isTie(grid));
+            System.out.println("--------Check--------");
+             isGameGoing = (!isTie(grid)||isUserWinner(grid)||isAiWinner(grid));
+        }while (!isGameGoing);
+
+       if (!isTie(grid))
+       {System.out.println("Tie.");
+       } else if (isUserWinner(grid)) {
+           System.out.println("You won!");
+       } else if (isAiWinner(grid)) {
+           System.out.println("AI won, good luck next time!");
+       }
     }
 }
