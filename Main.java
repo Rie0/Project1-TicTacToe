@@ -49,12 +49,14 @@ public class Main {
                 }else{
                     System.out.print(grid[i][j]+" | ");
                 }
-                if(j/2!=0){
-                    System.out.println("\n----------"); //remove from last position
+                if(i> grid.length-2){
+                    System.out.print("");//remove last line
+                }else if(j/2!=0){
+                    System.out.println("\n----------");
                 }
             }
         }
-        System.out.println(); //leave space
+        System.out.println("\n"); //leave space
     }
 
 
@@ -62,23 +64,34 @@ public class Main {
         Random rand = new Random();
         int randomRow=rand.nextInt(0,3);
         int randomColumn=rand.nextInt(0,3);
-        if (grid[randomRow][randomColumn]==0){
-            grid[randomRow][randomColumn]=1;
-        } //get ai to try again if space is full(not 0), use do while.
+
+        while(grid[randomRow][randomColumn]!=0){  //get ai to try again if space is full(not 0). do while is better??
+            randomRow=rand.nextInt(0,3);
+            randomColumn=rand.nextInt(0,3);
+        }
+        grid[randomRow][randomColumn]=1;
+
     }
 
-    public static void userTurn(int[][] grid){
+    public static void userTurn(int[][] grid){ //handle exceptions? or gracefully ask user to enter again
         Scanner sc =new Scanner(System.in);
 
         System.out.println("Enter row: ");
         int userRow= sc.nextInt();
         System.out.println("Enter column: ");
         int userColumn= sc.nextInt();
-        if (grid[userRow][userColumn]==0){
-            grid[userRow][userColumn]=2;
+
+        while(grid[userRow][userColumn]!=0){ //can be optimized? do while?
+            System.out.println("Position is taken, try again.");
+            System.out.println("Enter row: ");
+            userRow= sc.nextInt();
+            System.out.println("Enter column: ");
+            userColumn= sc.nextInt();
         }
+        grid[userRow][userColumn]=2;
     }
-    public static boolean isUserWinner(int[][] grid){ //(int[][] grid, current player? with user being 2 and AI 1??)
+
+    public static boolean isUserWinner(int[][] grid){
         //3 cases.
         boolean isUserWinner = false;
 //Case 1 Horizontal wins
@@ -91,8 +104,24 @@ public class Main {
         if (grid[2][0]==2&&grid[2][1]==2&&grid[2][2]==2){
             isUserWinner=true;
         }
+//Case 2 vertical wins
+        if (grid[0][0]==2&&grid[1][0]==2&&grid[2][0]==2){
+            isUserWinner=true;
+        }
+        if (grid[0][1]==2&&grid[1][1]==2&&grid[2][1]==2){
+            isUserWinner=true;
+        }
+        if (grid[0][2]==2&&grid[1][2]==2&&grid[2][2]==2){
+            isUserWinner=true;
+        }
+        //Case 3 Crosses
+        if (grid[0][0]==2&&grid[1][1]==2&&grid[2][2]==2){
+            isUserWinner=true;
+        }
+        if (grid[0][2]==2&&grid[1][1]==2&&grid[2][0]==2){
+            isUserWinner=true;
+        }
         return isUserWinner;
-
     }
 
     public static boolean isAiWinner(int[][] grid){ //(int[][] grid, current player? with user being 2 and AI 1??)
@@ -108,6 +137,23 @@ public class Main {
         }
         if (grid[2][0]==1&&grid[2][1]==1&&grid[2][2]==1){
             isAiWinner = true;
+        }
+//Case 2 vertical wins
+        if (grid[0][0]==2&&grid[1][0]==2&&grid[2][0]==1){
+            isAiWinner=true;
+        }
+        if (grid[0][1]==2&&grid[1][1]==2&&grid[2][1]==1){
+            isAiWinner=true;
+        }
+        if (grid[0][2]==2&&grid[1][2]==2&&grid[2][2]==1){
+            isAiWinner=true;
+        }
+//Case 3 Crosses
+        if (grid[0][0]==2&&grid[1][1]==2&&grid[2][2]==1){
+            isAiWinner=true;
+        }
+        if (grid[0][2]==2&&grid[1][1]==2&&grid[2][0]==1){
+            isAiWinner=true;
         }
 
         return isAiWinner;
@@ -129,16 +175,18 @@ public class Main {
 
     public static void matchMaker(int[][] grid){
         boolean isGameGoing = false;
-        do {
+        do {// indicate whose turn now, plus round??? no so you can add the (3 rounds) functionality
+
+            //can't see grid when ai wins :(
             aiTurn(grid);
             printGrid(grid);
             userTurn(grid);
             printGrid(grid);
-            System.out.println("--------Check--------");
-            System.out.println(isAiWinner(grid));
-            System.out.println(isUserWinner(grid));
-            System.out.println(isTie(grid));
-            System.out.println("--------Check--------");
+//            System.out.println("--------Check--------");
+//            System.out.println(isAiWinner(grid));
+//            System.out.println(isUserWinner(grid));
+//            System.out.println(isTie(grid));
+//            System.out.println("--------Check--------");
              isGameGoing = (!isTie(grid)||isUserWinner(grid)||isAiWinner(grid));
         }while (!isGameGoing);
 
