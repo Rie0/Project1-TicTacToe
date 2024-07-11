@@ -10,14 +10,10 @@ public class Main {
 //2- Use method.
 //3- Should Display a Game Board.
 //4- Ask player position.
-//5- Check if the position available, if not available keep asking the player to enter a
-//valid position.
+//5- Check if the position available, if not available keep asking the player to enter a valid position.
 //6- Computer chose random position and check valid position.
 //7- Checks if either player or Computer has won.
 
-        //Classes variables. (might end up redundant)
-        Scanner sc =new Scanner(System.in);
-        Random rand = new Random();
 
 //Start of - The grid **********************************
         int[][] grid={ //row[]column[]
@@ -29,17 +25,14 @@ public class Main {
         };
 //End of - The grid ***************************************
 
-        //Include in matchMaker()********************
+//Start the match
         matchMaker(grid);
-       //Include in matchMaker()********************
 
 
         //ideas: use a String array instead? to use X/O and empty are " " and wins by isEqualIgnoreCase by the five rules.
-        //Match make method: has a boolean to check if there's an empty space left. if not print DRAW/TIE.
     }
 
  //Methods.
-
     public static void printGrid(int[][] grid){
 
         for (int i = 0; i < grid.length; i++) {
@@ -47,12 +40,12 @@ public class Main {
                 if (j/2!=0){
                     System.out.print(grid[i][j]);
                 }else{
-                    System.out.print(grid[i][j]+" | ");
+                    System.out.print(grid[i][j]+"  |  ");
                 }
                 if(i> grid.length-2){
-                    System.out.print("");//remove last line
+                    System.out.print("");//removes last line
                 }else if(j/2!=0){
-                    System.out.println("\n----------");
+                    System.out.println("\n--------------");
                 }
             }
         }
@@ -65,7 +58,7 @@ public class Main {
         int randomRow=rand.nextInt(0,3);
         int randomColumn=rand.nextInt(0,3);
 
-        while(grid[randomRow][randomColumn]!=0){  //get ai to try again if space is full(not 0). do while is better??
+        while(grid[randomRow][randomColumn]!=0){  //get ai to try again if space is full (not 0). do while is better??
             randomRow=rand.nextInt(0,3);
             randomColumn=rand.nextInt(0,3);
         }
@@ -92,7 +85,6 @@ public class Main {
     }
 
     public static boolean isUserWinner(int[][] grid){
-        //3 cases.
         boolean isUserWinner = false;
 //Case 1 Horizontal wins
         if (grid[0][0]==2&&grid[0][1]==2&&grid[0][2]==2){
@@ -114,7 +106,7 @@ public class Main {
         if (grid[0][2]==2&&grid[1][2]==2&&grid[2][2]==2){
             isUserWinner=true;
         }
-        //Case 3 Crosses
+//Case 3 Crosses
         if (grid[0][0]==2&&grid[1][1]==2&&grid[2][2]==2){
             isUserWinner=true;
         }
@@ -125,10 +117,8 @@ public class Main {
     }
 
     public static boolean isAiWinner(int[][] grid){ //(int[][] grid, current player? with user being 2 and AI 1??)
-        //3 cases.
         boolean isAiWinner = false;
 //Case 1 Horizontal wins
-
         if (grid[0][0]==1&&grid[0][1]==1&&grid[0][2]==1){
             isAiWinner = true;
         }
@@ -139,20 +129,20 @@ public class Main {
             isAiWinner = true;
         }
 //Case 2 vertical wins
-        if (grid[0][0]==2&&grid[1][0]==2&&grid[2][0]==1){
+        if (grid[0][0]==1&&grid[1][0]==1&&grid[2][0]==1){
             isAiWinner=true;
         }
-        if (grid[0][1]==2&&grid[1][1]==2&&grid[2][1]==1){
+        if (grid[0][1]==1&&grid[1][1]==1&&grid[2][1]==1){
             isAiWinner=true;
         }
-        if (grid[0][2]==2&&grid[1][2]==2&&grid[2][2]==1){
+        if (grid[0][2]==1&&grid[1][2]==1&&grid[2][2]==1){
             isAiWinner=true;
         }
 //Case 3 Crosses
-        if (grid[0][0]==2&&grid[1][1]==2&&grid[2][2]==1){
+        if (grid[0][0]==1&&grid[1][1]==1&&grid[2][2]==1){
             isAiWinner=true;
         }
-        if (grid[0][2]==2&&grid[1][1]==2&&grid[2][0]==1){
+        if (grid[0][2]==1&&grid[1][1]==1&&grid[2][0]==1){
             isAiWinner=true;
         }
 
@@ -175,11 +165,15 @@ public class Main {
 
     public static void matchMaker(int[][] grid){
         boolean isGameGoing = false;
-        do {// indicate whose turn now, plus round??? no so you can add the (3 rounds) functionality
+        do {// indicate whose turn now, *plus current round when you add the (3 rounds) functionality
 
             //can't see grid when ai wins :(
+            System.out.println("---AI Turn---");
             aiTurn(grid);
             printGrid(grid);
+            isGameGoing = (!isTie(grid)||isUserWinner(grid)||isAiWinner(grid));
+            if (isGameGoing){break;}
+            System.out.println("--User Turn--");
             userTurn(grid);
             printGrid(grid);
 //            System.out.println("--------Check--------");
@@ -190,12 +184,12 @@ public class Main {
              isGameGoing = (!isTie(grid)||isUserWinner(grid)||isAiWinner(grid));
         }while (!isGameGoing);
 
-       if (!isTie(grid))
-       {System.out.println("Tie.");
-       } else if (isUserWinner(grid)) {
-           System.out.println("You won!");
-       } else if (isAiWinner(grid)) {
-           System.out.println("AI won, good luck next time!");
-       }
+        if (isAiWinner(grid)) {
+            System.out.println("AI won, good luck next time!");
+        }else if (isUserWinner(grid)) {
+            System.out.println("You won!");
+        } else if (!isTie(grid))
+        {System.out.println("Tie.");
+        }
     }
 }
