@@ -15,15 +15,14 @@ public class Main {
 //7- Checks if either player or Computer has won.
 
 
-//Start of - The grid **********************************
-        int[][] grid={ //row[]column[]
+//Create The grid **********************************
+        String[][] grid={ //row[]column[]
 
     //Column 0,1,2   //Row
-            {0,0,0}, //0
-            {0,0,0}, //1
-            {0,0,0}  //2
+            {" "," "," "}, //0
+            {" "," "," "}, //1
+            {" "," "," "}  //2
         };
-//End of - The grid ***************************************
 
 //Start the match
         matchMaker(grid);
@@ -33,8 +32,7 @@ public class Main {
     }
 
  //Methods.
-    public static void printGrid(int[][] grid){
-
+    public static void printGrid(String[][] grid){
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid.length; j++) {
                 if (j/2!=0){
@@ -53,20 +51,20 @@ public class Main {
     }
 
 
-    public static void aiTurn(int[][] grid){
+    public static void aiTurn(String[][] grid){
         Random rand = new Random();
-        int randomRow=rand.nextInt(0,3);
-        int randomColumn=rand.nextInt(0,3);
+        int randomRow=0;
+        int randomColumn=0;
 
-        while(grid[randomRow][randomColumn]!=0){  //get ai to try again if space is full (not 0). do while is better??
-            randomRow=rand.nextInt(0,3);
+        do {
+           randomRow=rand.nextInt(0,3);
             randomColumn=rand.nextInt(0,3);
-        }
-        grid[randomRow][randomColumn]=1;
+        } while(!grid[randomRow][randomColumn].equals(" "));
+        grid[randomRow][randomColumn]="X";
 
     }
 
-    public static void userTurn(int[][] grid){ //handle exceptions? or gracefully ask user to enter again
+    public static void userTurn(String[][] grid){ //handle exceptions? or gracefully ask user to enter again
         Scanner sc =new Scanner(System.in);
 
         System.out.println("Enter row: ");
@@ -74,75 +72,75 @@ public class Main {
         System.out.println("Enter column: ");
         int userColumn= sc.nextInt();
 
-        while(grid[userRow][userColumn]!=0){ //can be optimized? do while?
+        while(!grid[userRow][userColumn].equals(" ")){
             System.out.println("Position is taken, try again.");
             System.out.println("Enter row: ");
             userRow= sc.nextInt();
             System.out.println("Enter column: ");
             userColumn= sc.nextInt();
         }
-        grid[userRow][userColumn]=2;
+        grid[userRow][userColumn]="O";
     }
 
-    public static boolean isUserWinner(int[][] grid){
+    public static boolean isUserWinner(String[][] grid){ //User is O
         boolean isUserWinner = false;
 //Case 1 Horizontal wins
-        if (grid[0][0]==2&&grid[0][1]==2&&grid[0][2]==2){
+        if (grid[0][0].equalsIgnoreCase("O")&&grid[0][1].equalsIgnoreCase("O")&&grid[0][2].equalsIgnoreCase("O")){
             isUserWinner=true;
         }
-        if (grid[1][0]==2&&grid[1][1]==2&&grid[1][2]==2){
+        if (grid[1][0].equalsIgnoreCase("O")&&grid[1][1].equalsIgnoreCase("O")&&grid[1][2].equalsIgnoreCase("O")){
             isUserWinner=true;
         }
-        if (grid[2][0]==2&&grid[2][1]==2&&grid[2][2]==2){
+        if (grid[2][0].equalsIgnoreCase("O")&&grid[2][1].equalsIgnoreCase("O")&&grid[2][2].equalsIgnoreCase("O")){
             isUserWinner=true;
         }
 //Case 2 vertical wins
-        if (grid[0][0]==2&&grid[1][0]==2&&grid[2][0]==2){
+        if (grid[0][0].equalsIgnoreCase("O")&&grid[1][0].equalsIgnoreCase("O")&&grid[2][0].equalsIgnoreCase("O")){
             isUserWinner=true;
         }
-        if (grid[0][1]==2&&grid[1][1]==2&&grid[2][1]==2){
+        if (grid[0][1].equalsIgnoreCase("O")&&grid[1][1].equalsIgnoreCase("O")&&grid[2][1].equalsIgnoreCase("O")){
             isUserWinner=true;
         }
-        if (grid[0][2]==2&&grid[1][2]==2&&grid[2][2]==2){
+        if (grid[0][2].equalsIgnoreCase("O")&&grid[1][2].equalsIgnoreCase("O")&&grid[2][2].equalsIgnoreCase("O")){
             isUserWinner=true;
         }
 //Case 3 Crosses
-        if (grid[0][0]==2&&grid[1][1]==2&&grid[2][2]==2){
+        if (grid[0][0].equalsIgnoreCase("O")&&grid[1][1].equalsIgnoreCase("O")&&grid[2][2].equalsIgnoreCase("O")){
             isUserWinner=true;
         }
-        if (grid[0][2]==2&&grid[1][1]==2&&grid[2][0]==2){
+        if (grid[0][2].equalsIgnoreCase("O")&&grid[1][1].equalsIgnoreCase("O")&&grid[2][0].equalsIgnoreCase("O")){
             isUserWinner=true;
         }
         return isUserWinner;
     }
 
-    public static boolean isAiWinner(int[][] grid){ //(int[][] grid, current player? with user being 2 and AI 1??)
+    public static boolean isAiWinner(String[][] grid){ //AI is X
         boolean isAiWinner = false;
 //Case 1 Horizontal wins
-        if (grid[0][0]==1&&grid[0][1]==1&&grid[0][2]==1){
+        if (grid[0][0].equalsIgnoreCase("X")&&grid[0][1].equalsIgnoreCase("X")&&grid[0][2].equalsIgnoreCase("X")){
             isAiWinner = true;
         }
-        if (grid[1][0]==1&&grid[1][1]==1&&grid[1][2]==1){
+        if (grid[1][0].equalsIgnoreCase("X")&&grid[1][1].equalsIgnoreCase("X")&&grid[1][2].equalsIgnoreCase("X")){
             isAiWinner = true;
         }
-        if (grid[2][0]==1&&grid[2][1]==1&&grid[2][2]==1){
+        if (grid[2][0].equalsIgnoreCase("X")&&grid[2][1].equalsIgnoreCase("X")&&grid[2][2].equalsIgnoreCase("X")){
             isAiWinner = true;
         }
 //Case 2 vertical wins
-        if (grid[0][0]==1&&grid[1][0]==1&&grid[2][0]==1){
+        if (grid[0][0].equalsIgnoreCase("X")&&grid[1][0].equalsIgnoreCase("X")&&grid[2][0].equalsIgnoreCase("X")){
             isAiWinner=true;
         }
-        if (grid[0][1]==1&&grid[1][1]==1&&grid[2][1]==1){
+        if (grid[0][1].equalsIgnoreCase("X")&&grid[1][1].equalsIgnoreCase("X")&&grid[2][1].equalsIgnoreCase("X")){
             isAiWinner=true;
         }
-        if (grid[0][2]==1&&grid[1][2]==1&&grid[2][2]==1){
+        if (grid[0][2].equalsIgnoreCase("X")&&grid[1][2].equalsIgnoreCase("X")&&grid[2][2].equalsIgnoreCase("X")){
             isAiWinner=true;
         }
 //Case 3 Crosses
-        if (grid[0][0]==1&&grid[1][1]==1&&grid[2][2]==1){
+        if (grid[0][0].equalsIgnoreCase("X")&&grid[1][1].equalsIgnoreCase("X")&&grid[2][2].equalsIgnoreCase("X")){
             isAiWinner=true;
         }
-        if (grid[0][2]==1&&grid[1][1]==1&&grid[2][0]==1){
+        if (grid[0][2].equalsIgnoreCase("X")&&grid[1][1].equalsIgnoreCase("X")&&grid[2][0].equalsIgnoreCase("X")){
             isAiWinner=true;
         }
 
@@ -150,12 +148,12 @@ public class Main {
 
     }
 
-    public static boolean isTie(int[][] grid){
+    public static boolean isTie(String[][] grid){
         //Check if the grid is full //NAMING PLEAAASE
         boolean isFull = false;
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid.length; j++) {
-                if (grid[i][j]==0){
+                if (grid[i][j].equals(" ")){
                     isFull = true;
                 }
             }
@@ -163,11 +161,10 @@ public class Main {
         return isFull;
     }
 
-    public static void matchMaker(int[][] grid){
+    public static void matchMaker(String[][] grid){
         boolean isGameGoing = false;
         do {// indicate whose turn now, *plus current round when you add the (3 rounds) functionality
 
-            //can't see grid when ai wins :(
             System.out.println("---AI Turn---");
             aiTurn(grid);
             printGrid(grid);
